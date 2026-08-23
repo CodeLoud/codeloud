@@ -21,7 +21,7 @@ env:
 jobs:
   web:
     name: Lint, typecheck, test, and build Web
-    runs-on: blacksmith-2vcpu-ubuntu-2404
+    runs-on: ${{ vars.CODELOUD_CI_RUNNER || 'blacksmith-2vcpu-ubuntu-2404' }}
     timeout-minutes: 20
     steps:
       - name: Check out family repository

@@ -28,10 +28,10 @@ The rationale and supporting primary sources are recorded in
 ## Clone and initialize
 
 Voice and Relay are private repositories, so Git must already be authenticated
-for the `PyRo1121` GitHub account.
+for the `CodeLoud` GitHub organization.
 
 ```bash
-git clone https://github.com/PyRo1121/codeloud.git
+git clone https://github.com/CodeLoud/codeloud.git
 cd codeloud
 git submodule update --init --recursive
 ```
