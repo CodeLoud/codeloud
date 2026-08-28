@@ -19,6 +19,12 @@
 			"database_id": "e8154226-b335-42d6-ba04-c40840629156",
 		},
 	],
+	"services": [
+		{
+			"binding": "RELAY_SERVICE",
+			"service": "relay-mcp-production",
+		},
+	],
 	"workers_dev": false,
 	"routes": [
 		{

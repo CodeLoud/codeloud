@@ -150,6 +150,26 @@ Relay is deployed to production at `relay.codeloud.xyz` (worker `relay-mcp-produ
 
 The "Apply for Relay beta" CTAs on the family page link to the Relay service's own application flow at `https://relay.codeloud.xyz/#beta` (a `rel="external"` link, typed through Web's product catalog `applyUrl`). The formal application — Turnstile verification with the `relay_beta_apply` action, rate limiting, status tokens, and human review — remains authoritative on the Relay service. This site does not duplicate the form or proxy submissions: a server-side proxy would collapse Relay's source-based rate limiting (its `cf-connecting-ip` pseudonym) and a cross-origin browser POST is blocked by CORS. The family interest form remains the measurement layer only. Voice has no `applyUrl` yet, so its CTA stays an in-page interest button.
 
+## Apex Relay routing
+
+The `codeloud-family-site` Worker remains the Custom Domain origin for `codeloud.xyz` and the fallback for all family-site paths. Its server hook now acts as the single front door for Relay aliases:
+
+- `/mcp` and Relay's OAuth/OpenID metadata paths call `relay-mcp-production` through the `RELAY_SERVICE` Service Binding. The router rewrites only the internal request URL to Relay's canonical origin and preserves the method, headers, body, query, and cancellation signal.
+- Stateful browser and API paths such as `/account`, `/login`, `/api/auth/*`, `/api/beta/*`, and `/api/relay/*` return a temporary `307` redirect to `relay.codeloud.xyz`. Keeping these flows on one canonical origin avoids splitting cookies, OAuth state, callback URLs, and Turnstile hostname policy across the apex and Relay subdomain.
+- All other paths continue through SvelteKit. If the Service Binding is absent or rejects, Relay-owned machine paths return a bounded `503` with `no-store`; they never fall through to a family-site 404.
+
+This is intentionally reversible. Production Worker version `5a8340c6-b380-4a4a-9903-b098c60668c1` serves 100% of traffic after zero-percent version-override validation. Previous version `8b4f72b0-6ae5-4dbe-98f6-eb18a8d73a65` remains deployed at 0% as the pre-router rollback target, and the redirects are temporary and non-cacheable. Removing the hook and Service Binding restores the prior Custom Domain behavior without changing Relay's own hostname.
+
+Cloudflare documents Service Bindings as the account-scoped Worker-to-Worker mechanism and recommends them over public HTTP calls. SvelteKit's `handle` hook may bypass route rendering for programmatic routing, and Cloudflare passes bindings through `event.platform.env` when using `adapter-cloudflare`.
+
+Sources:
+
+- Cloudflare Service Bindings: <https://developers.cloudflare.com/workers/runtime-apis/bindings/service-bindings/>
+- Cloudflare Service Binding HTTP API: <https://developers.cloudflare.com/workers/runtime-apis/bindings/service-bindings/http/>
+- Cloudflare Custom Domains: <https://developers.cloudflare.com/workers/configuration/routing/custom-domains/>
+- SvelteKit server hooks: <https://svelte.dev/docs/kit/hooks#Server-hooks-handle>
+- SvelteKit Cloudflare adapter runtime APIs: <https://svelte.dev/docs/kit/adapter-cloudflare#Runtime-APIs>
+
 ## Standards audit
 
 This slice follows the repository's global TypeScript and Svelte 5 requirements: strict compiler settings, parsed boundaries, runes (`$state`, `$derived`, `$props`, `$effect`/`#await`), modern event attributes, thin components, no legacy `class:` directives, no raw API payloads in components, and explicit resource/fallback handling.
