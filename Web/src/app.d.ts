@@ -1,7 +1,9 @@
 import type { D1Database } from "@cloudflare/workers-types";
+import type { RelayServiceBinding } from "$lib/server/relay-router";
 
 type CodeLoudInterestEnvironment = {
 	readonly CODELOUD_INTEREST_DB?: D1Database;
+	readonly RELAY_SERVICE?: RelayServiceBinding;
 	readonly TURNSTILE_SITE_KEY?: string;
 	readonly TURNSTILE_SECRET?: string;
 	readonly CODELOUD_INTEREST_HOSTNAMES?: string;
