@@ -3,6 +3,28 @@ import { GUIDE_LIST, GUIDE_SLUGS, guideFor } from "./guides";
 import { guideStructuredData, productStructuredData } from "./seo";
 import { productPageFor } from "./product-pages";
 
+describe("Voice product claims", () => {
+	it("describes reviewed clipboard delivery rather than universal insertion", () => {
+		const voice = productPageFor("voice");
+		expect(voice.workflow.join(" ")).toContain("clipboard");
+		expect(voice.capabilities.map((capability) => capability.detail).join(" ")).toContain(
+			"not universal",
+		);
+		const delivery = voice.capabilities.map((capability) => capability.detail).join(" ");
+		expect(delivery).toContain("tested Hyprland setups");
+		expect(delivery).not.toContain("delivery is the default");
+		expect(voice.cta).toEqual({ _tag: "internal", url: "/early-access?product=voice" });
+	});
+
+	it("distinguishes hosted speech from local correction and separate consent", () => {
+		const voice = productPageFor("voice");
+		expect(voice.boundary).toContain("CodeLoud API");
+		expect(voice.boundary).toContain("local");
+		expect(voice.boundary).toContain("separate");
+		expect(voice.boundary).toContain("zero retention");
+	});
+});
+
 describe("guide catalog", () => {
 	it("keeps route slugs, titles, and canonical content unique", () => {
 		expect(GUIDE_LIST).toHaveLength(GUIDE_SLUGS.length);

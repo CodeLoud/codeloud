@@ -31,19 +31,19 @@ const PRODUCT_PAGES = {
 	voice: {
 		id: "voice",
 		eyebrow: "CodeLoud Voice / developer dictation",
-		title: "Voice dictation for coding agents that keeps code terms reviewable.",
+		title: "Speak naturally. Keep code terms precise.",
 		description:
-			"Dictate coding-agent prompts, commands, and code-adjacent notes. Review project terms, filenames, symbols, paths, packages, and commands before insertion.",
+			"Voice dictation for coding agents. Review project-aware corrections to filenames, symbols, and commands before copying your prompt. In private development.",
 		promise:
-			"Speak prompts, commands, code-adjacent notes, and rough ideas without pretending uncertain recognition is certain.",
+			"Dictate the instruction, not every keystroke. Voice checks code terms against your approved project context so you can review the changes before handing a prompt to your coding agent.",
 		problemTitle: "Speech recognition breaks at code-specific terms.",
 		problem:
 			"General speech recognition is optimized for ordinary language. Developer work is full of uncommon identifiers, compact commands, version strings, and repository-specific vocabulary where one character can change the meaning.",
 		workflowTitle: "From spoken prompt to reviewed developer text.",
 		workflow: [
-			"Capture speech for a prompt, command, issue, note, or code-adjacent task.",
-			"Compare recognized language with bounded project vocabulary such as symbols and paths.",
-			"Review the original transcript and proposed corrections before insertion.",
+			"Choose a speech model and accept its policy disclosure, then capture your instruction for hosted transcription.",
+			"Compare the transcript locally with approved project vocabulary. Inspect suggested filenames, symbols, and paths alongside the original words.",
+			"Review the result, confirm delivery to the clipboard, and paste it into your coding agent. You decide what to send or run.",
 		],
 		capabilitiesTitle: "Code-aware dictation without silent rewrites.",
 		capabilities: [
@@ -58,14 +58,14 @@ const PRODUCT_PAGES = {
 					"Keep recognition uncertainty and proposed identifier changes reviewable instead of silently rewriting text.",
 			},
 			{
-				title: "Controlled insertion",
+				title: "Reviewed handoff",
 				detail:
-					"Choose when reviewed text reaches an editor, terminal, issue tracker, or coding-agent prompt.",
+					"Copy text for recovery or use window-level paste on tested Hyprland setups. Insertion is not universal, and placement can remain unverified. Voice does not submit your prompt or run a command.",
 			},
 		],
-		boundaryTitle: "Provider boundaries stay visible",
+		boundaryTitle: "Hosted speech. Local correction.",
 		boundary:
-			"Voice currently uses external speech providers. Retention, deletion, and training-use policies vary by provider, so CodeLoud does not claim universal local processing or zero retention.",
+			"Audio goes through the CodeLoud API to an external speech provider under the selected model policy. Project-aware correction is local. Source-body inspection and provider keyterms require separate opt-ins. Provider retention and training policies vary; Voice does not promise universal local processing or zero retention.",
 		ctaLabel: "Request Voice early access",
 		cta: { _tag: "internal", url: "/early-access?product=voice" },
 	},
