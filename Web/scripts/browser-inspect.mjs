@@ -135,6 +135,43 @@ try {
 	if (consoleErrors.length === 0) pass("No application console errors");
 	else fail("Console errors", consoleErrors.join("; "));
 
+	report("\nVoice product page:");
+	await desktop.goto(`${SITE_URL}/voice`, { waitUntil: "domcontentloaded" });
+	const voiceCta = desktop.getByRole("link", { name: "Request Voice early access" });
+	const voiceCtaBox = await voiceCta.boundingBox();
+	const voiceAccessBox = await desktop.locator(".voice-access").boundingBox();
+	if (
+		voiceCtaBox &&
+		voiceCtaBox.y >= 0 &&
+		voiceCtaBox.y + voiceCtaBox.height <= 800 &&
+		voiceAccessBox &&
+		voiceAccessBox.y + voiceAccessBox.height <= 800
+	) {
+		pass("Voice CTA and access limits are visible above the fold");
+	} else {
+		fail("Voice hero", JSON.stringify({ voiceCtaBox, voiceAccessBox }));
+	}
+	const voiceText = await desktop.locator("main").innerText();
+	if (
+		voiceText.includes("Private development") &&
+		voiceText.includes("illustrative example") &&
+		voiceText.includes("Reviewed handoff") &&
+		voiceText.includes("placement can remain unverified") &&
+		voiceText.includes("CodeLoud API") &&
+		voiceText.includes("separate opt-ins")
+	) {
+		pass("Voice renders maturity, example, delivery, and provider boundaries");
+	} else {
+		fail("Voice claims", "Missing a public product boundary");
+	}
+	await voiceCta.click();
+	await desktop.waitForURL(`${SITE_URL}/early-access?product=voice`);
+	if ((await desktop.locator("input[name='product']").inputValue()) === "voice") {
+		pass("Voice CTA reaches the Voice-selected interest form");
+	} else {
+		fail("Voice CTA", "Voice was not selected");
+	}
+
 	report("\nIndexable SEO routes:");
 	const seoIssues = [];
 	const titles = new Set();
