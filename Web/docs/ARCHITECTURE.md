@@ -69,7 +69,11 @@ Sources:
 
 ### Voice
 
-The page may describe project-aware vocabulary, transcript review, bounded identifier correction, and controlled insertion because those capabilities are documented by the Voice project. The page must not claim universal local processing, zero retention, provider-side deletion, training exclusion, or universal latency. The Voice project currently uses external speech providers and provider retention/training policies are not uniform.
+The page describes project-aware vocabulary, transcript review, bounded identifier correction, and clipboard-confirmed delivery. Its hero shows private-development status from `product-catalog.ts` and a labeled illustrative review example, not a recording or live transcription demo. The interest CTA does not promise a download, access, or platform availability.
+
+Hosted transcription goes through the CodeLoud API to an external speech provider. Project-aware correction is local. Source-body inspection and provider keyterms require separate consent. Window-level paste is supported on tested Hyprland setups, but insertion is not universal and placement can remain unverified. Other X11 insertion remains experimental. Do not describe clipboard-only delivery as the universal default. The page must not claim universal local processing, zero retention, provider-side deletion, training exclusion, or universal latency.
+
+The claim boundaries follow `Voice/README.md` and `Voice/docs/plans/remaining-roadmap-implementation-plan.md`. Recheck those sources before changing delivery, consent, platform, or release claims. `src/lib/domain/guides.test.ts` checks the content boundaries, and `scripts/browser-inspect.mjs` checks the rendered status, example label, above-the-fold CTA, and Voice-selected interest destination.
 
 ### Relay
 
@@ -148,7 +152,7 @@ Relay is deployed to production at `relay.codeloud.xyz` (worker `relay-mcp-produ
 
 ## Relay beta integration
 
-The "Apply for Relay beta" CTAs on the family page link to the Relay service's own application flow at `https://relay.codeloud.xyz/#beta` (a `rel="external"` link, typed through Web's product catalog `applyUrl`). The formal application — Turnstile verification with the `relay_beta_apply` action, rate limiting, status tokens, and human review — remains authoritative on the Relay service. This site does not duplicate the form or proxy submissions: a server-side proxy would collapse Relay's source-based rate limiting (its `cf-connecting-ip` pseudonym) and a cross-origin browser POST is blocked by CORS. The family interest form remains the measurement layer only. Voice has no `applyUrl` yet, so its CTA stays an in-page interest button.
+The "Apply for Relay beta" CTAs on the family page link to the Relay service's own application flow at `https://relay.codeloud.xyz/#beta` (a `rel="external"` link, typed through Web's product catalog `applyUrl`). The formal application — Turnstile verification with the `relay_beta_apply` action, rate limiting, status tokens, and human review — remains authoritative on the Relay service. This site does not duplicate the form or proxy submissions: a server-side proxy would collapse Relay's source-based rate limiting (its `cf-connecting-ip` pseudonym) and a cross-origin browser POST is blocked by CORS. The family interest form remains the measurement layer only. Voice has no `applyUrl` yet. Its CTA navigates to `/early-access?product=voice`, which preselects Voice in the family interest form.
 
 ## Apex Relay routing
 

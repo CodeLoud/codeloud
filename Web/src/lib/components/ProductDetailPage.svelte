@@ -3,6 +3,7 @@
 	import SiteFooter from "$lib/components/SiteFooter.svelte";
 	import SiteHeader from "$lib/components/SiteHeader.svelte";
 	import type { ProductPageDefinition } from "$lib/domain/product-pages";
+	import { productFor } from "$lib/domain/product-catalog";
 
 	interface Props {
 		readonly page: ProductPageDefinition;
@@ -28,12 +29,42 @@
 					{page.ctaLabel}<span aria-hidden="true">↘</span>
 				</a>
 			{/if}
+			{#if page.id === "voice"}
+				<p class="voice-access">
+					<strong>{productFor(page.id).status}.</strong> Register interest, not a download. Access and
+					platform availability are not yet guaranteed.
+				</p>
+			{/if}
 		</div>
-		<aside class="detail-stamp" aria-label={`${page.id} product status`}>
-			<span>CODELOUD / {page.id}</span>
-			<strong>{page.id === "voice" ? "INPUT" : "CONTEXT"}</strong>
-			<span>{page.id === "voice" ? "human reviewed" : "evidence attached"}</span>
-		</aside>
+		{#if page.id === "voice"}
+			<figure class="voice-example" aria-labelledby="voice-example-caption">
+				<figcaption id="voice-example-caption">
+					A code-term review / illustrative example
+				</figcaption>
+				<div class="voice-transcript">
+					<p class="mono-label">Original transcript</p>
+					<p>“Update the user profile component in source slash components.”</p>
+				</div>
+				<div class="voice-evidence">
+					<p class="mono-label">Approved project vocabulary</p>
+					<code>src/components/UserProfile.tsx</code>
+				</div>
+				<div class="voice-reviewed">
+					<p class="mono-label">Proposed correction</p>
+					<p>Update the <mark>UserProfile</mark> component in <mark>src/components</mark>.</p>
+				</div>
+				<p class="voice-example-note">
+					Review the suggestion against the original. Keep your words when the evidence is unclear.
+				</p>
+				<p class="voice-handoff">Review → Confirm clipboard → Paste</p>
+			</figure>
+		{:else}
+			<aside class="detail-stamp" aria-label="Relay product role">
+				<span>CODELOUD / {page.id}</span>
+				<strong>CONTEXT</strong>
+				<span>evidence attached</span>
+			</aside>
+		{/if}
 	</section>
 
 	<section class="detail-section page-shell" aria-labelledby="problem-title">
@@ -116,6 +147,136 @@
 <SiteFooter />
 
 <style>
+	.detail-voice .detail-hero {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		align-items: center;
+		gap: clamp(2rem, 5vw, 5rem);
+		min-height: auto;
+		padding-block: clamp(2.5rem, 5vw, 5rem);
+	}
+
+	.detail-voice .detail-hero h1 {
+		max-width: 15ch;
+		font-size: clamp(2.5rem, 4.4vw, 4.5rem);
+		line-height: 1.03;
+		letter-spacing: -0.055em;
+	}
+
+	.detail-voice .detail-promise {
+		font-size: 1.05rem;
+		line-height: 1.65;
+		margin-top: 1.4rem;
+	}
+
+	.voice-access {
+		max-width: 48ch;
+		margin: 1rem 0 0;
+		color: var(--muted);
+		font-size: 0.8rem;
+		line-height: 1.6;
+	}
+
+	.voice-access strong {
+		color: var(--text);
+		font-weight: 550;
+	}
+
+	.voice-example {
+		min-width: 0;
+		margin: 0;
+		border: 1px solid var(--line-strong);
+		background: var(--paper-raised);
+		padding: clamp(1.2rem, 2.5vw, 2rem);
+	}
+
+	.voice-example figcaption {
+		color: var(--muted);
+		font-family: var(--mono);
+		font-size: 0.65rem;
+		line-height: 1.7;
+	}
+
+	.voice-example > div {
+		margin-top: 1.5rem;
+	}
+
+	.voice-example .mono-label {
+		font-size: 0.6rem;
+	}
+
+	.voice-example div > p:last-child {
+		margin: 0.7rem 0 0;
+		font-size: 1.05rem;
+		line-height: 1.6;
+	}
+
+	.voice-transcript > p:last-child {
+		color: var(--muted);
+	}
+
+	.voice-evidence code {
+		display: block;
+		margin-top: 0.7rem;
+		font-family: var(--mono);
+		font-size: 0.8rem;
+		overflow-wrap: anywhere;
+	}
+
+	.voice-reviewed {
+		border-top: 1px solid var(--line-strong);
+		padding-top: 1.5rem;
+	}
+
+	.voice-reviewed mark {
+		background: transparent;
+		color: var(--text);
+		text-decoration: underline;
+		text-decoration-color: var(--accent);
+		text-underline-offset: 0.3em;
+	}
+
+	.voice-example-note {
+		color: var(--muted);
+		font-size: 0.8rem;
+		line-height: 1.6;
+	}
+
+	.voice-handoff {
+		margin: 1.5rem 0 0;
+		border-top: 1px solid var(--line-strong);
+		padding-top: 1rem;
+		font-family: var(--mono);
+		font-size: 0.65rem;
+		line-height: 1.8;
+	}
+
+	.detail-voice .detail-cta:hover {
+		color: var(--accent);
+		border-color: var(--accent);
+	}
+
+	.detail-voice .detail-section,
+	.detail-voice .capabilities,
+	.detail-voice .boundary,
+	.detail-voice .product-links {
+		padding-block: clamp(2.5rem, 5vw, 4.5rem);
+		gap: clamp(2rem, 5vw, 5rem);
+	}
+
+	.detail-voice .detail-section h2,
+	.detail-voice .capabilities h2,
+	.detail-voice .boundary h2,
+	.detail-voice .product-links h2 {
+		font-size: clamp(1.8rem, 3vw, 2.8rem);
+		line-height: 1.1;
+		letter-spacing: -0.04em;
+	}
+
+	.detail-voice .large-copy {
+		font-size: clamp(1.15rem, 2vw, 1.5rem);
+		line-height: 1.6;
+	}
+
 	.detail-hero {
 		display: grid;
 		grid-template-columns: minmax(0, 1.4fr) minmax(15rem, 0.6fr);
@@ -341,6 +502,10 @@
 	}
 
 	@media (max-width: 780px) {
+		.detail-voice .detail-hero {
+			grid-template-columns: 1fr;
+		}
+
 		.detail-hero,
 		.detail-section,
 		.capabilities,
